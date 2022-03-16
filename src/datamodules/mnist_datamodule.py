@@ -34,6 +34,7 @@ class MNISTDataModule(LightningDataModule):
         pin_memory: bool = False,
     ):
         super().__init__()
+        self.dataset_str = "MNIST"
 
         # this line allows to access init params with 'self.hparams' attribute
         self.save_hyperparameters(logger=False)

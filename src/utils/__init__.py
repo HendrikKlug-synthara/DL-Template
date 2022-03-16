@@ -6,6 +6,7 @@ import pytorch_lightning as pl
 import rich.syntax
 import rich.tree
 from omegaconf import DictConfig, OmegaConf
+from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.utilities import rank_zero_only
 
 
@@ -109,7 +110,7 @@ def log_hyperparameters(
     trainer: pl.Trainer,
     callbacks: List[pl.Callback],
     logger: List[pl.loggers.LightningLoggerBase],
-) -> None:
+) -> dict:
     """Controls which config parts are saved by Lightning loggers.
 
     Additionaly saves:
@@ -140,6 +141,11 @@ def log_hyperparameters(
 
     # send hparams to all loggers
     trainer.logger.log_hyperparams(hparams)
+
+    return {
+        k: OmegaConf.to_container(v) if isinstance(v, DictConfig) else v
+        for k, v in hparams.items()
+    }
 
 
 def finish(

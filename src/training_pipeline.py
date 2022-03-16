@@ -13,6 +13,7 @@ from pytorch_lightning import (
 from pytorch_lightning.loggers import LightningLoggerBase
 
 from src import utils
+from src.utils.utils import get_callback
 
 log = utils.get_logger(__name__)
 
@@ -71,7 +72,7 @@ def train(config: DictConfig) -> Optional[float]:
 
     # Send some parameters from config to all lightning loggers
     log.info("Logging hyperparameters!")
-    utils.log_hyperparameters(
+    hparams = utils.log_hyperparameters(
         config=config,
         model=model,
         datamodule=datamodule,
@@ -79,6 +80,7 @@ def train(config: DictConfig) -> Optional[float]:
         callbacks=callbacks,
         logger=logger,
     )
+    get_callback(trainer.callbacks, "DBLogger").store_hparams(trainer, hparams=hparams)
 
     # Train the model
     if config.get("train"):
