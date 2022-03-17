@@ -28,6 +28,7 @@ class MNISTLitModule(LightningModule):
         net: torch.nn.Module,
         lr: float = 0.001,
         weight_decay: float = 0.0005,
+        random_horizontal_flip: bool = True,
     ):
         super().__init__()
 
@@ -120,3 +121,7 @@ class MNISTLitModule(LightningModule):
         return torch.optim.Adam(
             params=self.parameters(), lr=self.hparams.lr, weight_decay=self.hparams.weight_decay
         )
+
+    @property
+    def transform(self):
+        return self.net.transform(self.hparams.random_horizontal_flip)

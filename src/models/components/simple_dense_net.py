@@ -1,4 +1,5 @@
 from torch import nn
+from torchvision.transforms import transforms
 
 
 class SimpleDenseNet(nn.Module):
@@ -32,3 +33,19 @@ class SimpleDenseNet(nn.Module):
         x = x.view(batch_size, -1)
 
         return self.model(x)
+
+    @staticmethod
+    def transform(random_horizontal_flip):
+        tfs = [transforms.RandomHorizontalFlip()] if random_horizontal_flip else []
+        return {
+            "train": transforms.Compose(
+                [
+                    *tfs,
+                    transforms.ToTensor(),
+                    transforms.Normalize((0.1307,), (0.3081,)),
+                ]
+            ),
+            "val": transforms.Compose(
+                [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+            ),
+        }
