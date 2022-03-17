@@ -4,7 +4,7 @@
 defaults:
   - _self_
   - datamodule: mnist.yaml # choose the datamodule for evaluation
-  - model: mnist.yaml
+  - model: mnist_densenet.yaml
   - callbacks: null
   - logger: null
   - trainer: default.yaml
@@ -16,7 +16,7 @@ defaults:
   - override hydra/hydra_logging: colorlog
   - override hydra/job_logging: colorlog
 
-original_work_dir: ${hydra:runtime.cwd}
+original_work_dir: ${hydra.runtime.cwd}
 
 data_dir: ${original_work_dir}/data/
 

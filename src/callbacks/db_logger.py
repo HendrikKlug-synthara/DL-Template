@@ -107,19 +107,7 @@ class DBLogger(pl.Callback):
         )
 
         if not trainer.fast_dev_run:
-            self.save_checkpoint_to_db(Path(trained_model_path))
-
-    def save_checkpoint_to_db(self, checkpoint_fn: Path):
-        """
-        Inspired from https://medium.com/naukri-engineering/way-to-store-large-deep-learning-models-in-production-ready-environments-d8a4c66cc04c
-        There is probably a better way to store Tensors in MongoDB.
-        """
-        if checkpoint_fn.exists():
-            fs = self.db.connect_with_gridfs()
-
-            with io.FileIO(str(checkpoint_fn), "r") as fileObject:
-                log.info(f"Saving checkpoint to db: {checkpoint_fn}")
-                fs.put(fileObject, filename=str(checkpoint_fn), _id=self.experiment_uid)
+            self.db.save_checkpoint_to_db(_id=self.experiment_uid, checkpoint_fn=Path(trained_model_path))
 
     def __repr__(self):
         return "DBLogger"
